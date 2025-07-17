@@ -20,7 +20,7 @@ public class JogoDaVelha {
         //recebe o input
         String entrada = elementoDigitado.nextLine();
 
-        //verifica se o formato está correto e continua quando esta errado
+        //verifica se o formato está correto e volta o while
         if(!JogoDaVelha.FormatoCorreto(entrada)){
             System.out.println("Formato errado. Digite novamente. Formato: x(2,1)");
             continue;
