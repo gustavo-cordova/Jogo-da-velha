@@ -2,24 +2,27 @@ import java.util.Scanner;
 
 public class JogoDaVelha {
     //método principal
-    public static void main(String[] args) {
+    public static void main(String[] args){
         Scanner elementoDigitado = new Scanner(System.in);
-        System.out.println("Digite X ou O, seguido da linha e da coluna. Ex: x(2,1):");
+        System.out.println("Digite a letra X ou O, seguido da linha e da coluna. Formato: x(2,1):");
 
         //declara o array de elementos
         String[][] elementos = {{" ", " "," "},
                                 {" ", " "," "},
                                 {" ", " "," "}};
+
+        //mostra o jogo antes de começar o jogo
+        JogoDaVelha.MostraElementosNoConsole(elementos);
         
         //repete as rodadas até o jogo acabar
-        while (!JogoDaVelha.FimDeJogo(elementos)[0]){
+        while(!JogoDaVelha.FimDeJogo(elementos)[0]){
         
         //recebe o input
         String entrada = elementoDigitado.nextLine();
 
         //verifica se o formato está correto e continua quando esta errado
         if(!JogoDaVelha.FormatoCorreto(entrada)){
-            System.out.println("Formato errado. Digite novamente. Ex: x(2,1)");
+            System.out.println("Formato errado. Digite novamente. Formato: x(2,1)");
             continue;
         }
 
@@ -34,7 +37,7 @@ public class JogoDaVelha {
         String letra = JogoDaVelha.TrataOsDados(entrada)[0];
 
         //verifica se a posição esta ocupada e adiciona
-        if (JogoDaVelha.Verificador(elementos,posI,posJ)){
+        if (JogoDaVelha.Verificador(elementos, posI, posJ)){
             elementos[posI][posJ] = letra;
         }
 
@@ -63,23 +66,25 @@ public class JogoDaVelha {
     }
 
     //mostra os elementos do jogo (a tabela)
-    public static void MostraElementosNoConsole(String[][] elementos) {
+    public static void MostraElementosNoConsole(String[][] elementos){
         for(int j = 0; j < 3; j++){
             for(int i = 0; i < 3; i++){
-                System.out.printf("%s ", elementos[j][i]);
+                System.out.printf("%s ", elementos[j][i].toUpperCase());
                 if(i == 2 || i == 5 || i == 8){
                     System.out.printf("\n");
                 } else {
                     System.out.printf("| ");
                 }
             }
-            System.out.println("---------");
+            if(j != 2){
+                System.out.println("---------");
+            }
         }
     } 
     
 
     //verificador de spot ocupado
-    public static boolean Verificador(String[][] elementos, int i, int j) {
+    public static boolean Verificador(String[][] elementos, int i, int j){
         if(elementos[i][j].equalsIgnoreCase("x") || elementos[i][j].equalsIgnoreCase("o")){
             System.out.println("Posição já ocupada. Selecione outra posição");
             return false;
@@ -88,56 +93,55 @@ public class JogoDaVelha {
     }
 
     public static String[] TrataOsDados(String entrada) {
-        entrada = entrada.trim();
         String letra = entrada.substring(0,1);
-        String posI = entrada.substring(2, 3);
-        String posJ = entrada.substring(4, 5);
-        String[] dadosFormatados = {letra,posI,posJ};
+        String posI = entrada.substring(2,3);
+        String posJ = entrada.substring(4,5);
+        String[] dadosFormatados = {letra, posI, posJ};
         return dadosFormatados;
     }
 
     //ganhou ou não ganhouSystem.out.println(
-    public static boolean[] FimDeJogo(String[][] elementos) {
+    public static boolean[] FimDeJogo(String[][] elementos){
         for (int z=0;z<3;z++) {
-            if (elementos[z][0].equals(elementos[z][1]) && elementos[z][1].equals(elementos[z][2]) && elementos[z][0].equalsIgnoreCase("X")) {
+            if (JogoDaVelha.ComparacoesDeLinhasParaFimDeJogo(elementos, z, "x")){
                 boolean[] resultado = {true, true};
             return resultado;
             }
 
-            if (elementos[z][0].equals(elementos[z][1]) && elementos[z][1].equals(elementos[z][2]) && elementos[z][0].equalsIgnoreCase("O")) {
+            if (JogoDaVelha.ComparacoesDeLinhasParaFimDeJogo(elementos, z, "o")){
                 boolean[] resultado = {true, false};
             return resultado;
             }
         }
 
-        for (int z=0;z<3;z++) {
-            if (elementos[0][z].equals(elementos[1][z]) && elementos[1][z].equals(elementos[2][z]) && elementos[0][z].equalsIgnoreCase("X")) {
+        for (int z=0; z<3; z++) {
+            if (JogoDaVelha.ComparacoesDeColunasParaFimDeJogo(elementos, z, "x")){
             boolean[] resultado = {true, true};
             return resultado;
             }
 
-            if (elementos[0][z].equals(elementos[1][z]) && elementos[1][z].equals(elementos[2][z]) && elementos[0][z].equalsIgnoreCase("O")) {
+            if (JogoDaVelha.ComparacoesDeColunasParaFimDeJogo(elementos, z, "o")){
             boolean[] resultado = {true, false};
             return resultado;
             }
         }
         
-        if (elementos[0][0].equals(elementos[1][1]) && elementos[1][1].equals(elementos[2][2]) && elementos[0][0].equalsIgnoreCase("X")) {
+        if (JogoDaVelha.ComparacoesDeDiagonaisParaFimDeJogo(elementos, 0, 0, 2, "x")) {
             boolean[] resultado = {true, true};
             return resultado;
         }
 
-        if (elementos[0][0].equals(elementos[1][1]) && elementos[1][1].equals(elementos[2][2]) && elementos[0][0].equalsIgnoreCase("O")) {
+        if (JogoDaVelha.ComparacoesDeDiagonaisParaFimDeJogo(elementos, 0, 0, 2, "o")) {
             boolean[] resultado = {true, false};
             return resultado;
         }
 
-        if (elementos[0][2].equals(elementos[1][1]) && elementos[1][1].equals(elementos[2][0]) && elementos[0][2].equalsIgnoreCase("X")) {
+        if (JogoDaVelha.ComparacoesDeDiagonaisParaFimDeJogo(elementos, 0, 2, 0, "x")) {
             boolean[] resultado = {true, true};
             return resultado;
         }
 
-        if (elementos[0][2].equals(elementos[1][1]) && elementos[1][1].equals(elementos[2][0]) && elementos[0][2].equalsIgnoreCase("O")) {
+        if (JogoDaVelha.ComparacoesDeDiagonaisParaFimDeJogo(elementos, 0, 2, 0, "o")){
             boolean[] resultado = {true, false};
             return resultado;
         }
@@ -151,7 +155,31 @@ public class JogoDaVelha {
         return resultado;
     }
 
-    public static boolean DeuVelha(String[][] elementos) {
+    public static boolean ComparacoesDeLinhasParaFimDeJogo(String[][] elementos, int num, String letra){
+        return (
+        elementos[num][0].equals(elementos[num][1])
+        && elementos[num][1].equals(elementos[num][2])
+        && elementos[num][0].equalsIgnoreCase(letra)
+        );
+    }
+
+    public static boolean ComparacoesDeColunasParaFimDeJogo(String[][] elementos, int num, String letra){
+        return (
+        elementos[0][num].equals(elementos[1][num])
+        && elementos[1][num].equals(elementos[2][num])
+        && elementos[0][num].equalsIgnoreCase(letra)
+        );
+    }
+
+    public static boolean ComparacoesDeDiagonaisParaFimDeJogo(String[][] elementos, int num1, int num2, int num3, String letra){
+        return (
+            elementos[num1][num2].equals(elementos[1][1])
+            && elementos[1][1].equals(elementos[2][num3])
+            && elementos[num1][num2].equalsIgnoreCase(letra)
+        );
+    }
+
+    public static boolean DeuVelha(String[][] elementos){
         
         for(int j = 0; j < 3; j++){
             for(int i = 0; i < 3; i++){
@@ -164,14 +192,23 @@ public class JogoDaVelha {
         return true;
     }
 
-    public static boolean FormatoCorreto(String entrada) {
-        if((entrada.substring(0,1).equalsIgnoreCase("x") || entrada.substring(0,1).equalsIgnoreCase("o")) && entrada.substring(1,2).equalsIgnoreCase("(") && ehNumerico(entrada.substring(2,3)) && ehNumerico(entrada.substring(4,5)) && entrada.substring(3,4).equalsIgnoreCase(",") && entrada.substring(5,6).equalsIgnoreCase(")") && Integer.parseInt(entrada.substring(2,3)) <= 3 && Integer.parseInt(entrada.substring(4,5)) <= 3){
+    public static boolean FormatoCorreto(String entrada){
+        if(
+            (entrada.substring(0,1).equalsIgnoreCase("x") || entrada.substring(0,1).equalsIgnoreCase("o"))
+            && entrada.substring(1,2).equalsIgnoreCase("(")
+            && ehNumerico(entrada.substring(2,3))
+            && ehNumerico(entrada.substring(4,5))
+            && entrada.substring(3,4).equalsIgnoreCase(",")
+            && entrada.substring(5,6).equalsIgnoreCase(")")
+            && Integer.parseInt(entrada.substring(2,3)) <= 3
+            && Integer.parseInt(entrada.substring(4,5)) <= 3
+        ){
             return true;
         }
         return false;
     }
 
-    public static boolean ehNumerico(String str) {
+    public static boolean ehNumerico(String str){
         try {
             Integer.parseInt(str);
             return true;
